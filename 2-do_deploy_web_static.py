@@ -6,10 +6,10 @@ from fabric.api import env, local, put, run, runs_once
 
 
 env.hosts = ["54.236.28.42", "54.237.97.175"]
+env.user = "ubuntu" 
+env.key_filename = "/root/.ssh/school"
 """The list of host server IP addresses."""
 
-env.user = "ubuntu"  # Specify the username
-env.key_filename = "/root/.ssh/school"  # Specify the path to your SSH private key
 
 @runs_once
 def do_pack():
@@ -28,12 +28,11 @@ def do_pack():
     try:
         print("Packing web_static to {}".format(output))
         local("tar -cvzf {} web_static".format(output))
-        archive_size = os.stat(output).st_size
-        print("web_static packed: {} -> {} Bytes".format(output, archive_size))
-        return output
-    except Exception as e:
-        print("Error packing web_static:", e)
-        return None
+        archize_size = os.stat(output).st_size
+        print("web_static packed: {} -> {} Bytes".format(output, archize_size))
+    except Exception:
+        output = None
+    return output
 
 
 def do_deploy(archive_path):
@@ -42,25 +41,22 @@ def do_deploy(archive_path):
         archive_path (str): The path to the archived static files.
     """
     if not os.path.exists(archive_path):
-        print("Archive file does not exist.")
         return False
-
     file_name = os.path.basename(archive_path)
-    folder_name = file_name[:-4]  # Remove the .tgz extension
+    folder_name = file_name.replace(".tgz", "")
     folder_path = "/data/web_static/releases/{}/".format(folder_name)
-
+    success = False
     try:
         put(archive_path, "/tmp/{}".format(file_name))
         run("mkdir -p {}".format(folder_path))
         run("tar -xzf /tmp/{} -C {}".format(file_name, folder_path))
-        run("rm /tmp/{}".format(file_name))
+        run("rm -rf /tmp/{}".format(file_name))
         run("mv {}web_static/* {}".format(folder_path, folder_path))
         run("rm -rf {}web_static".format(folder_path))
         run("rm -rf /data/web_static/current")
         run("ln -s {} /data/web_static/current".format(folder_path))
         print('New version deployed!')
-        return True
-    except Exception as e:
-        print("Error deploying:", e)
-        return False
-
+        success = True
+    except Exception:
+        success = False
+    return success
