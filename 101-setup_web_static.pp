@@ -40,18 +40,15 @@ exec { 'make-static-files-folder':
 
 file { '/data/web_static/releases/test/index.html':
   content =>
-"<!DOCTYPE html>
-<html lang='en-US'>
-	<head>
-		<title>Home - AirBnB Clone</title>
-	</head>
-	<body>
-		<h1>Welcome to AirBnB!</h1>
-	<body>
-</html>
-",
+"<html>
+  <head>
+  </head>
+  <body>
+    Holberton School
+  </body>
+</html>",
   replace => true,
-  require => Exec['make-static-files-folder'],
+  require => Exec['sudo make-static-files-folder'],
 }
 
 exec { 'link-static-files':
