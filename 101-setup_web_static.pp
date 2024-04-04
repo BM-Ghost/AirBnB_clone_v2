@@ -48,7 +48,7 @@ file { '/data/web_static/releases/test/index.html':
   </body>
 </html>",
   replace => true,
-  require => Exec['sudo make-static-files-folder'],
+  require => Exec['make-static-files-folder'],
 }
 
 exec { 'link-static-files':
@@ -118,3 +118,4 @@ exec { 'start-nginx':
 }
 
 Exec['start-nginx']
+
