@@ -4,7 +4,8 @@
     creates two routes / amd /hbnb
 """
 
-from flask import Flask, escape
+from flask import Flask
+from werkzeug.utils import escape
 app = Flask(__name__)
 
 
@@ -25,3 +26,4 @@ def c_isfun(text):
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=False)
+
