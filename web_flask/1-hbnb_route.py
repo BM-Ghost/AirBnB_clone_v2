@@ -1,24 +1,27 @@
 #!/usr/bin/python3
 """
-    Python Flask script that starts up and applications and
-    creates two routes / amd /hbnb
+script starts Flask web app
+    listen on 0.0.0.0, port 5000
+    routes: /:     display "Hello HBNB!"
+            /hbnb: display "HBNB"
 """
 
 from flask import Flask
 app = Flask(__name__)
+app.url_map.strict_slashes = False
 
 
-@app.route('/', strict_slashes=False)
-def home():
-    """ returning the result"""
-    return ("Hello HBNB!")
+@app.route('/')
+def hello_hbnb():
+    """display text"""
+    return "Hello HBNB!"
 
 
-@app.route('/hbnb', strict_slashes=False)
-def home_hbnb():
-    """ working on the file"""
-    return ("HBNB")
+@app.route('/hbnb')
+def hbnb():
+    """display text"""
+    return "HBNB"
 
 
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=False)
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000)
